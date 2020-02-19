@@ -7,10 +7,22 @@ services:
     ports:
       - "127.0.0.1:2015:2015"
     volumes:
-      - "/home/nam/tmp/otsdaq-cvmfs/data:/opt/ots"
+      - "/home/nam/tmp/otsdaq-cvmfs/dev:/opt/ots"
+      - "/home/nam/tmp/otsdaq-cvmfs/data:/opt/data"
     privileged: true
     stdin_open: true
     tty: true
+    links:
+      - "ots-db"
+
+  ots-db:
+    image: mongo:4.2.3-bionic
+    container_name: ots-db
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:27117-27119:27017-27019
+    volumes:
+      - /home/nam/tmp/otsdaq-cvmfs/db:/data/db
 
 volumes:
   ots-data:

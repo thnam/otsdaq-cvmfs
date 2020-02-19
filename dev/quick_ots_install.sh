@@ -1,14 +1,7 @@
 #!/bin/bash
 #
-# This script is expected to be sourced as root from the directory into which you want ots installed.
-#
-# Note: you can try to install as a standard user, but the yum install commands will probably fail
-# 	(this might be ok, if the system has already been setup).
-#
-# cd my/install/path
-# wget https://cdcvs.fnal.gov/redmine/projects/otsdaq-utilities/repository/revisions/develop/raw/tools/quick_ots_install.sh -O quick_ots_install.sh --no-check-certificate
-# chmod 755 quick_ots_install.sh
-# source quick_ots_install.sh
+# This is a modified version of the ots installation script at:
+# https://cdcvs.fnal.gov/redmine/projects/otsdaq-utilities/repository/revisions/develop/raw/tools/quick_ots_install.sh 
 #
 
 USER=$(whoami)
@@ -57,6 +50,7 @@ cp srcs/otsdaq_utilities/tools/change_ots_qualifiers.sh .
 chmod 755 change_ots_qualifiers.sh
 ./change_ots_qualifiers.sh v2_05_00 s85:e17:prof
 
+# setup and compile
 source /cvmfs/fermilab.opensciencegrid.org/products/artdaq/setup
 setup mrb
 export MRB_PROJECT=otsdaq_stm
@@ -67,9 +61,23 @@ export CETPKG_J=$(nproc)
 source mrbSetEnv
 mrb i --generator ninja
 
+# clean up
 mkdir install; mv quick_ots_install.* install
 
-echo -e "quick_ots_install.sh [${LINENO}]  \t =================="
+# download data/database
+export USER_DATA="/opt/data/UserData"
+export ARTDAQ_DATABASE_URI="filesystemdb:///opt/data/UserDatabase/filesystemdb/test_db"
+export OTSDAQ_DATA="/opt/data/OutputData"
+
+./srcs/otsdaq_demo/tools/get_tutorial_data.sh --tutorial first_demo --version v2_5
+./srcs/otsdaq_demo/tools/get_tutorial_database.sh --tutorial first_demo --version v2_5
+
+# convert to mongodb
+mkdir tmpDB && cd tmpDB && conftool.py exportDatabase && \
+  export ARTDAQ_DATABASE_URI=mongodb://ots-db/stm && \
+  conftool.py importDatabase && cd .. && rm -rf tmpDB
+
+ech o-e "quick_ots_install.sh [${LINENO}]  \t =================="
 echo -e "quick_ots_install.sh [${LINENO}]  \t quick_ots_install script done!"
 echo -e "quick_ots_install.sh [${LINENO}]  \t"
 echo -e "quick_ots_install.sh [${LINENO}]  \t Next time, cd to ${PWD}:"
@@ -84,9 +92,3 @@ echo -e "quick_ots_install.sh [${LINENO}]  \t\t ots                     ########
 
 echo -e "quick_ots_install.sh [${LINENO}]  \t *******************************"
 echo -e "quick_ots_install.sh [${LINENO}]  \t *******************************"
-
-
-
-
-
-
