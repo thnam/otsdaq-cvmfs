@@ -24,42 +24,12 @@ echo -e "quick_ots_install.sh [${LINENO}]  \t user '$USER' installing for target
 echo -e "quick_ots_install.sh [${LINENO}]  \t (note: target user is set based on the owner of $PWD)"
 echo -e "quick_ots_install.sh [${LINENO}]  "
 
-
-# at this point, there must have been valid parameters
-
-if [ $USER == "root" ]; then
-
-	#install ots dependencies
-	yum install -y libuuid-devel openssl-devel python-devel
-	
-	#install cvmfs
-	yum install -y https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest.noarch.rpm
-	yum clean all
-	yum install -y cvmfs cvmfs-config-default
-	
-	mkdir /etc
-	mkdir /etc/cvmfs
-	mkdir /etc/cvmfs/default.d
-	
-	rm -rf /etc/cvmfs/default.d/70-artdaq.conf
-	echo "CVMFS_REPOSITORIES=fermilab.opensciencegrid.org" >> /etc/cvmfs/default.d/70-artdaq.conf
-	echo "CVMFS_HTTP_PROXY=DIRECT" >> /etc/cvmfs/default.d/70-artdaq.conf
-	
-	#refresh cvmfs
-	cvmfs_config setup
-	#Check if CernVM-FS mounts the specified repositories by (restart if failure): 
-	cvmfs_config probe || service autofs restart
-
-fi
-
 #install ots
-mv ots oldOts/ && mkdir oldOts && rm -rf oldOts/ots && mv ots oldOts/
-rm -rf ots
-rm quick_ots_install.zip
+rm -rf ots quick_ots_install.zip
 wget https://otsdaq.fnal.gov/downloads/quick_ots_install.zip
 unzip quick_ots_install.zip
-cd ots
-
+mv ots/* .
+rmdir ots
 
 #update all
 REPO_DIR="$(find srcs/ -maxdepth 1 -iname 'otsdaq*')"
@@ -73,7 +43,9 @@ for p in ${REPO_DIR[@]}; do
 			echo -e "UpdateOTS.sh [${LINENO}]  \t Repo directory found as: $bp"
 			
 			cd $p
+      git stash
 			git pull
+      git checkout v2_05_00
 			cd -
 		fi
 	fi	   
@@ -83,39 +55,19 @@ done
 rm -rf change_ots_qualifiers.sh
 cp srcs/otsdaq_utilities/tools/change_ots_qualifiers.sh .
 chmod 755 change_ots_qualifiers.sh
-./change_ots_qualifiers.sh DEFAULT DEFAULT
+./change_ots_qualifiers.sh v2_05_00 s85:e17:prof
 
-source setup_ots.sh
+source /cvmfs/fermilab.opensciencegrid.org/products/artdaq/setup
+setup mrb
+export MRB_PROJECT=otsdaq_stm
+mrb newDev -v v2_05_00 -q s85:e17:prof -f
+source  localProducts_otsdaq_stm_v2_05_00_s85_e17_prof/setup
+setup ninja v1_8_2
+export CETPKG_J=$(nproc)
+source mrbSetEnv
+mrb i --generator ninja
 
-#update all (need to do again, after setup, or else ninja does not do mrbsetenv correctly(?))
-REPO_DIR="$(find srcs/ -maxdepth 1 -iname 'otsdaq*')"
-		
-for p in ${REPO_DIR[@]}; do
-	if [ -d $p ]; then
-		if [ -d $p/.git ]; then
-		
-			bp=$(basename $p)
-						
-			echo -e "UpdateOTS.sh [${LINENO}]  \t Repo directory found as: $bp"
-			
-			cd $p
-			git pull
-			cd -
-		fi
-	fi	   
-done
-
-#clean ninja compile
-mz 
-
-
-if [ $USER == "root" ]; then
-	chown -R $FOR_USER ../ots
-	chgrp -R $FOR_GROUP ../ots
-fi
-
-#remove self so users do not install twice!
-rm -rf ../quick_ots_install.sh
+mkdir install; mv quick_ots_install.* install
 
 echo -e "quick_ots_install.sh [${LINENO}]  \t =================="
 echo -e "quick_ots_install.sh [${LINENO}]  \t quick_ots_install script done!"
