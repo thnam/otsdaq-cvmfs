@@ -1,4 +1,4 @@
 data/*
 dev/*
-!dev/quick_ots_install.sh
+!dev/install/*.sh
 db/*

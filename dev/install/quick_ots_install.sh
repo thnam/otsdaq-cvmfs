@@ -61,21 +61,24 @@ export CETPKG_J=$(nproc)
 source mrbSetEnv
 mrb i --generator ninja
 
+rm setup_ots.sh && cp install/setup_ots.sh .
+mkdir -p /opt/data/{UserData,OutputData,UserDatabase}
+
 # clean up
-mkdir install; mv quick_ots_install.* install
+rm quick_ots_install.* 
 
 # download data/database
-export USER_DATA="/opt/data/UserData"
-export ARTDAQ_DATABASE_URI="filesystemdb:///opt/data/UserDatabase/filesystemdb/test_db"
-export OTSDAQ_DATA="/opt/data/OutputData"
+# export USER_DATA="/opt/data/UserData"
+# export ARTDAQ_DATABASE_URI="filesystemdb:///opt/data/UserDatabase/filesystemdb/test_db"
+# export OTSDAQ_DATA="/opt/data/OutputData"
 
-./srcs/otsdaq_demo/tools/get_tutorial_data.sh --tutorial first_demo --version v2_5
-./srcs/otsdaq_demo/tools/get_tutorial_database.sh --tutorial first_demo --version v2_5
+#./srcs/otsdaq_demo/tools/get_tutorial_data.sh --tutorial first_demo --version v2_5
+#./srcs/otsdaq_demo/tools/get_tutorial_database.sh --tutorial first_demo --version v2_5
 
 # convert to mongodb
-mkdir tmpDB && cd tmpDB && conftool.py exportDatabase && \
-  export ARTDAQ_DATABASE_URI=mongodb://ots-db/stm && \
-  conftool.py importDatabase && cd .. && rm -rf tmpDB
+#mkdir tmpDB && cd tmpDB && conftool.py exportDatabase && \
+#  export ARTDAQ_DATABASE_URI=mongodb://ots-db/stm && \
+#  conftool.py importDatabase && cd .. && rm -rf tmpDB
 
 ech o-e "quick_ots_install.sh [${LINENO}]  \t =================="
 echo -e "quick_ots_install.sh [${LINENO}]  \t quick_ots_install script done!"
