@@ -7,7 +7,7 @@ services:
     ports:
       - "127.0.0.1:2015:2015"
     volumes:
-      - ots-data:/opt/ots
+      - "/home/nam/tmp/otsdaq-cvmfs/data:/opt/ots"
     privileged: true
     stdin_open: true
     tty: true
