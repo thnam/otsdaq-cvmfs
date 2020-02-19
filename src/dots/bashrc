@@ -1,0 +1,43 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+
+# export PATH=/opt/bin:$PATH
+
+# User specific aliases and functions
+alias ls='ls --color=auto'
+alias ll='ls -ltr'
+alias l='ll'
+alias cp='cp -i'
+alias vi=vim
+export EDITOR=vim
+#alias make='make -j4'
+
+# ROOT
+alias root="root -l"
+
+svndiff()
+{
+  svn diff "${@}" | colordiff
+}
+export LIBGL_ALWAYS_INDIRECT=yes
+
+#SVN
+export SVN_EDITOR="vim"
+#History
+export HISTCONTROL=erasedups
+export HISTSIZE=10000000
+export PATH=~/bin:$PATH
+
+alias rcp='rsync --progress -ah'
+alias rsync='rsync -tvr --progress'
+
+export PS1="\[\033[0;31m\]@\h:\[\033[0;34m\]\W \[\033[0;32m\]\u \[\033[0m\]\$ "

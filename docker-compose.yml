@@ -1,0 +1,16 @@
+version: "3"
+services:
+  ots-cvmfs:
+    image: otsdaq-cvmfs:latest
+    container_name: ots
+    hostname: ots
+    ports:
+      - "127.0.0.1:2015:2015"
+    volumes:
+      - ots-data:/opt/ots
+    privileged: true
+    stdin_open: true
+    tty: true
+
+volumes:
+  ots-data:

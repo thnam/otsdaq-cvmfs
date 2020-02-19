@@ -1,0 +1,167 @@
+" Required:
+filetype plugin indent on
+"
+"
+" Change mapleadr from \ to ,
+let mapleader=","
+
+" Quickly edit/reload the vimrc file
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+" Jump to last known cursor pos
+if has("autocmd")
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+  au!
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+  augroup END
+else
+	set autoindent		" always set autoindenting on
+endif " has("autocmd")
+
+syntax on
+set background=dark
+set term=xterm-256color
+" colorscheme landscape
+" colorscheme skittles_berry
+" Use vim settings, not vi
+set nocompatible
+set modeline
+" set modelines=1
+" In many terminal emulators the mouse works just fine, thus enable it.
+"
+if has('mouse')
+  set mouse=a
+endif
+if has('mouse_sgr')
+  set ttymouse=sgr
+endif
+
+let g:tex_flavor='latex'
+
+set shiftwidth=2
+set tabstop=2
+set expandtab
+
+" Get rid of ~swap files every where
+set nobackup
+set nowritebackup
+set noswapfile
+
+" pdf printer
+"set pdev=pdf
+set printoptions=paper:letter,syntax:y,wrap:y,duplex:long
+
+" compile and run 
+nmap <f2> :Make! <cr>
+nmap <f3> :Make ./r!  <cr>
+" insert time stamp
+nnoremap <F5> "=strftime("- %b %d, %Y: ")<CR>P
+
+set encoding=utf-8
+set scrolloff=0
+set showmode
+set showcmd
+set hidden
+set wildmenu
+set wildmode=list:longest
+set visualbell
+" This shows (disturbing) line at the cursor
+" set cursorline
+set ttyfast
+set ruler
+set backspace=indent,eol,start
+set laststatus=2
+set relativenumber
+" Will create an undo file for every opened file
+"set undofile
+
+" Searching 
+set ignorecase
+set smartcase
+"set gdefault
+set incsearch
+set showmatch
+set hlsearch
+
+" Long lines handling
+set wrap
+set textwidth=79
+"set formatoptions=qrn1
+set formatoptions=tcqrn1
+set colorcolumn=80
+
+" history and undo levels
+set history=10000
+set undolevels=10000
+set wildignore=*.swp,*.bak,*.pyc,*.class
+
+" toggle paste mode
+set pastetoggle=<f4>
+
+" movement: Ctrl+<movement> instead of default of Ctrl+w+<movement>
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+map <c-l> <c-w>l
+map <c-h> <c-w>h
+" split setting
+set splitbelow
+set splitright
+
+" special hardcopy (print) color scheme
+if !exists("*UseMyHardcopyColors")
+  function UseMyHardcopyColors(args)
+    "if has("gui_running")
+    " save current colors
+    let save_bg=&bg
+    "let save_cs=g:colors_name
+    let save_cs=colorscheme
+    " set new colors
+    set bg=light
+    colorscheme emacs
+    "colorscheme fruit
+    "colorscheme phpx
+    "colorscheme professional
+    "colorscheme pspad
+    " call hardcopy
+    exec 'hardcopy '.a:args
+    " reset colors
+    exec 'set bg='.save_bg
+    exec 'colorscheme '.save_cs
+    "else
+    "exec 'hardcopy '.a:args
+    "endif
+  endfunction
+  " set new command Hardcop
+  command! -nargs=* Hardcopy call UseMyHardcopyColors('<args>')
+endif
+
+" TeX folding
+"let Tex_FoldedEnvironment="verbatim,comment,thebibliography,abstract,keywords"
+"let Tex_FoldedMisc="comments,preamble,<<<"
+autocmd BufNewFile,BufRead *.tex set spell spelllang=en_us
+
+let maplocalleader = "\\"
+
+hi Folded ctermbg=236
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+function! AdaptColorscheme()
+    highlight clear CursorLine
+    highlight Normal ctermbg=none
+    highlight LineNr ctermbg=none
+    highlight Folded ctermbg=none
+    highlight NonText ctermbg=none
+    highlight SpecialKey ctermbg=none
+    highlight VertSplit ctermbg=none
+    highlight SignColumn ctermbg=none
+endfunction
+autocmd ColorScheme * call AdaptColorscheme()
+
+"
+" Dont conceal quotes
+let g:vim_json_syntax_conceal = 0
