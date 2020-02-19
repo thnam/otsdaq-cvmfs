@@ -41,8 +41,8 @@ ADD dots/bashrc /home/stm/.bashrc
 ADD dots/gitconfig /home/stm/.gitconfig
 RUN chown stm:stm /home/stm/.bashrc /home/stm/.vimrc /home/stm/.gitconfig
 
-RUN mkdir -p /opt/ots /opt/db
-RUN chown -R stm:stm /opt/db /opt/ots
+RUN mkdir -p /opt/ots /opt/data
+RUN chown -R stm:stm /opt/data /opt/ots
 WORKDIR /opt/ots
 
 # define entry point
