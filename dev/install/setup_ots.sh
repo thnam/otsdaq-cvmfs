@@ -45,8 +45,8 @@ export CETPKG_J=$(nproc)
 export OTS_MAIN_PORT=2015
 
 export USER_DATA="/opt/data/UserData"
-#export ARTDAQ_DATABASE_URI="filesystemdb:///opt/data/UserDatabase/filesystemdb/test_db"
-export ARTDAQ_DATABASE_URI=mongodb://ots-db/stm
+export ARTDAQ_DATABASE_URI="filesystemdb:///opt/data/UserDatabase/filesystemdb/test_db"
+#export ARTDAQ_DATABASE_URI=mongodb://ots-db/stm
 export OTSDAQ_DATA="/opt/data/OutputData"
 
 echo -e "setup[${LINENO}]: \t Now your user data path is USER_DATA \t\t = ${USER_DATA}"
