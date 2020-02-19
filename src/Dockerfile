@@ -2,9 +2,9 @@ FROM centos:centos7.7.1908
 
 ENV container docker
 
-ARG MYUID
-ARG MYGID
-ARG USER
+ARG MYUID=1000
+ARG MYGID=1000
+ARG USER=stm
 
 RUN yum install -y epel-release && yum -y update 
 RUN yum install -y libuuid-devel openssl-devel python-devel openssh rsync git \
