@@ -1,0 +1,6 @@
+48,49c48,49
+< # export ARTDAQ_DATABASE_URI="filesystemdb:///opt/data/UserDatabase/filesystemdb/test_db"
+< export ARTDAQ_DATABASE_URI=mongodb://ots-db/stm
+---
+> export ARTDAQ_DATABASE_URI="filesystemdb:///opt/data/UserDatabase/filesystemdb/test_db"
+> #export ARTDAQ_DATABASE_URI=mongodb://ots-db/stm
