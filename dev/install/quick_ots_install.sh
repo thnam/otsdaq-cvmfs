@@ -68,7 +68,7 @@ mkdir -p /opt/data/{UserData,OutputData,UserDatabase}
 # clean up
 rm quick_ots_install.* 
 
-ech o-e "quick_ots_install.sh [${LINENO}]  \t =================="
+echo -e "quick_ots_install.sh [${LINENO}]  \t =================="
 echo -e "quick_ots_install.sh [${LINENO}]  \t quick_ots_install script done!"
 echo -e "quick_ots_install.sh [${LINENO}]  \t"
 echo -e "quick_ots_install.sh [${LINENO}]  \t Next time, cd to ${PWD}:"
